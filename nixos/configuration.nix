@@ -46,7 +46,7 @@
   users.users."bored" = {
     isNormalUser = true;
     description = "bored";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
     packages = with pkgs; [
     ];
   };
@@ -64,9 +64,9 @@
     faugus-launcher
     zed-editor
     jetbrains.pycharm
-    kew
     emacs
     transmission_4-gtk
+    cmus
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
