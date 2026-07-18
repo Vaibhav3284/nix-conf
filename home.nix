@@ -22,6 +22,7 @@
     gnomeExtensions.dash-to-dock
     gnomeExtensions.appindicator
     gnomeExtensions.clipboard-indicator
+    gnome-tweaks
   ];
 
   dconf = {

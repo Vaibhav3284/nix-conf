@@ -66,6 +66,7 @@
     jetbrains.pycharm
     kew
     emacs
+    transmission_4-gtk
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
