@@ -10,6 +10,15 @@
     htop
     curl
     wget
+    gcc
+    tree-sitter
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    nerd-fonts.meslo-lg
+    noto-fonts
+    noto-fonts-color-emoji
+    liberation_ttf
+    corefonts
     gnomeExtensions.dash-to-dock
     gnomeExtensions.appindicator
     gnomeExtensions.clipboard-indicator
@@ -21,11 +30,11 @@
       # Master switch to ensure extensions are active
       "org/gnome/shell" = {
         disable-user-extensions = false;
-        
+
         enabled-extensions = with pkgs.gnomeExtensions; [
           dash-to-dock.extensionUuid
           appindicator.extensionUuid
-	  clipboard-indicator.extensionUuid
+	        clipboard-indicator.extensionUuid
         ];
       };
 
@@ -37,7 +46,7 @@
         dock-fixed = false;
 	custom-theme-shrink = true;
       };
-       
+
       "org/gnome/shell/extensions/clipboard-indicator" = {
         history-size = 50;           # Keep last 50 items
         preview-size = 30;           # Max characters shown in preview
@@ -46,22 +55,22 @@
     };
   };
 
-  home.file.".emacs.d" = {
-    source = ./dotfiles/.emacs.d; # Points to the folder relative to home.nix
-    recursive = true;        # Symlinks every file inside recursively
-  };
+  home.file.".emacs.d".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/.emacs.d";
+
+  home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/nvim";
 
   programs.git = {
-  enable = true;
-  userName = "Vaibhav3284";
-  userEmail = "boredpenguin05@gmail.com";
-
-  extraConfig = {
-    init.defaultBranch = "main";
-    push.autoSetupRemote = true; # Automatically push to tracking branch
-    pull.rebase = true;          # Prefer rebasing when pulling
+    enable = true;
+    settings = {
+      user = {
+        name = "Vaibhav3284";
+        email = "boredpenguin05@gmail.com";
+      };
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true; # Automatically push to tracking branch
+      pull.rebase = true;          # Prefer rebasing when pulling
+    };
   };
-};
 
   programs.home-manager.enable = true;
 }
