@@ -24,6 +24,14 @@
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.caffeine
     gnome-tweaks
+    (retroarch.withCores (cores: with cores; [
+      mame         # arcade
+      flycast      # dreamcast
+      mgba         # gba
+      mupen64plus  # n64
+      beetle-psx-hw # psx
+      snes9x       # snes
+    ]))
   ];
 
   dconf = {
@@ -47,13 +55,17 @@
         extend-height = false;
         autohide = true;
         dock-fixed = false;
-	custom-theme-shrink = true;
+	      custom-theme-shrink = true;
       };
 
       "org/gnome/shell/extensions/clipboard-indicator" = {
         history-size = 50;           # Keep last 50 items
         preview-size = 30;           # Max characters shown in preview
         clear-history-confirmation = true;
+      };
+
+      "org/gnome/shell/extensions/caffeine" = {
+        show-notifications = false;
       };
     };
   };
@@ -116,6 +128,7 @@
       visualizer_look = "▮●";
     };
   };
+  
   programs.home-manager.enable = true;
 }
 
