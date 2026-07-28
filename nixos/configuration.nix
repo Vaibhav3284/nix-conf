@@ -2,7 +2,7 @@
 
 {
   imports =
-    [ 
+    [
       ./hardware-configuration.nix
     ];
 
@@ -66,7 +66,7 @@
     jetbrains.pycharm
     emacs
     transmission_4-gtk
-    cmus
+    retroarch
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
