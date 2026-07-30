@@ -33,20 +33,25 @@
 
   services.printing.enable = true;
 
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
+services.pulseaudio.enable = false;
+security.rtkit.enable = true;
+
+# 2. PipeWire Configuration
+services.pipewire = {
+  enable = true;
+  alsa.enable = true;
+  alsa.support32Bit = true;
+  pulse.enable = true;
+  
+  # CRITICAL: WirePlumber manages PipeWire camera & audio streams
+  wireplumber.enable = true;
+};
 
 
   users.users."bored" = {
     isNormalUser = true;
     description = "bored";
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "camera" ];
     packages = with pkgs; [
     ];
   };
@@ -90,6 +95,15 @@
   # gnome-logs
   # gnome-system-monitor
 ];
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 4d";
+  };
+
+  # Automatically hard-link duplicate store files to save space
+  nix.settings.auto-optimise-store = true;
 
   system.stateVersion = "26.05"; # Did you read the comment?
 
