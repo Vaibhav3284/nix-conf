@@ -67,6 +67,14 @@
       "org/gnome/shell/extensions/caffeine" = {
         show-notifications = false;
       };
+      "org/gnome/mutter" = {
+      experimental-features = [ "scale-monitor-framebuffer" ];
+    };
+
+    # 2. Set text scaling factor to 0.75 (75% scale)
+    "org/gnome/desktop/interface" = {
+      text-scaling-factor = 0.75;
+    };
     };
   };
 

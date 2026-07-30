@@ -72,6 +72,7 @@ services.pipewire = {
     emacs
     transmission_4-gtk
     retroarch
+    openjdk21
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
