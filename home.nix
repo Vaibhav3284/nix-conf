@@ -24,14 +24,6 @@
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.caffeine
     gnome-tweaks
-    (retroarch.withCores (cores: with cores; [
-      mame         # arcade
-      flycast      # dreamcast
-      mgba         # gba
-      mupen64plus  # n64
-      beetle-psx-hw # psx
-      snes9x       # snes
-    ]))
   ];
 
   dconf = {

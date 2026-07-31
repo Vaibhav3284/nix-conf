@@ -71,8 +71,8 @@ services.pipewire = {
     jetbrains.pycharm
     emacs
     transmission_4-gtk
-    retroarch
     openjdk21
+    stremio-linux-shell
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
