@@ -2,8 +2,10 @@
 
   home.username = "bored";
   home.homeDirectory = "/home/bored";
-
   home.stateVersion = "26.05";
+
+  home.file.".emacs.d".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/.emacs.d";
+  home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/nvim";
 
   home.packages = with pkgs; [
     git
@@ -24,19 +26,43 @@
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.caffeine
     gnome-tweaks
+    devenv
   ];
+
+  programs.brave = {
+    enable = true;
+    commandLineArgs = [
+      "--disable-features=WebRtcAllowInputVolumeAdjustment"
+    ];
+    extensions = [
+      { id = "nngceckbapebfimnlniiiahkandclblb"; }
+      { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; }
+      { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; }
+    ];
+  };
+
+  programs.git = {
+    enable = true;
+    settings = {
+      user = {
+        name = "Vaibhav3284";
+        email = "boredpenguin05@gmail.com";
+      };
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+      pull.rebase = true;
+    };
+  };
 
   dconf = {
     enable = true;
     settings = {
-      # Master switch to ensure extensions are active
       "org/gnome/shell" = {
         disable-user-extensions = false;
-
         enabled-extensions = with pkgs.gnomeExtensions; [
           dash-to-dock.extensionUuid
           appindicator.extensionUuid
-	        clipboard-indicator.extensionUuid
+          clipboard-indicator.extensionUuid
           "caffeine@patapon.info"
         ];
       };
@@ -47,43 +73,26 @@
         extend-height = false;
         autohide = true;
         dock-fixed = false;
-	      custom-theme-shrink = true;
+        custom-theme-shrink = true;
       };
 
       "org/gnome/shell/extensions/clipboard-indicator" = {
-        history-size = 50;           # Keep last 50 items
-        preview-size = 30;           # Max characters shown in preview
+        history-size = 50;
+        preview-size = 30;
         clear-history-confirmation = true;
       };
 
       "org/gnome/shell/extensions/caffeine" = {
         show-notifications = false;
       };
+
       "org/gnome/mutter" = {
-      experimental-features = [ "scale-monitor-framebuffer" ];
-    };
-
-    # 2. Set text scaling factor to 0.75 (75% scale)
-    "org/gnome/desktop/interface" = {
-      text-scaling-factor = 0.75;
-    };
-    };
-  };
-
-  home.file.".emacs.d".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/.emacs.d";
-
-  home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/nvim";
-
-  programs.git = {
-    enable = true;
-    settings = {
-      user = {
-        name = "Vaibhav3284";
-        email = "boredpenguin05@gmail.com";
+        experimental-features = [ "scale-monitor-framebuffer" ];
       };
-      init.defaultBranch = "main";
-      push.autoSetupRemote = true; # Automatically push to tracking branch
-      pull.rebase = true;          # Prefer rebasing when pulling
+
+      "org/gnome/desktop/interface" = {
+        text-scaling-factor = 0.75;
+      };
     };
   };
 
@@ -91,13 +100,11 @@
     enable = true;
     musicDirectory = "${config.home.homeDirectory}/Music";
     extraConfig = ''
-      # Audio output for modern Linux systems running PipeWire
       audio_output {
         type        "pipewire"
         name        "PipeWire Sound Server"
       }
 
-      # Visualizer pipeline output (Required for ncmpcpp visualizer)
       audio_output {
         type        "fifo"
         name        "my_fifo"
@@ -107,14 +114,12 @@
     '';
   };
 
-  # 2. Configure ncmpcpp (The terminal user interface)
   programs.ncmpcpp = {
     enable = true;
     bindings = [
       { key = "space"; command = "pause"; }
     ];
     mpdMusicDir = "${config.home.homeDirectory}/Music";
-
     settings = {
       ncmpcpp_directory = "${config.xdg.configHome}/ncmpcpp";
       lyrics_directory = "${config.xdg.configHome}/ncmpcpp/lyrics";
@@ -125,11 +130,10 @@
       visualizer_data_source = "/tmp/mpd.fifo";
       visualizer_output_name = "my_fifo";
       visualizer_in_stereo = "yes";
-      visualizer_type = "wave"; # Can be spectrum, wave, or wave_filled
+      visualizer_type = "wave";
       visualizer_look = "▮●";
     };
   };
-  
+
   programs.home-manager.enable = true;
 }
-
