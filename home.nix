@@ -113,10 +113,11 @@
     bindings = [
       { key = "space"; command = "pause"; }
     ];
+    mpdMusicDir = "${config.home.homeDirectory}/Music";
+
     settings = {
       ncmpcpp_directory = "${config.xdg.configHome}/ncmpcpp";
       lyrics_directory = "${config.xdg.configHome}/ncmpcpp/lyrics";
-      mpd_music_dir = "${config.home.homeDirectory}/Music";
       progressbar_look = "─> ";
       user_interface = "alternative";
       alternative_header_first_line_format = "$b$1%t$/b";

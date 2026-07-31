@@ -36,7 +36,7 @@
           (
             { pkgs, ... }:
             {
-              environment.systemPackages = [ fjordlauncher.packages.${pkgs.system}.fjordlauncher ];
+              environment.systemPackages = [ fjordlauncher.packages.${pkgs.stdenv.hostPlatform.system}.fjordlauncher ];
             }
           )
         ];

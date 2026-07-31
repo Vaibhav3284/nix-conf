@@ -42,7 +42,7 @@ services.pipewire = {
   alsa.enable = true;
   alsa.support32Bit = true;
   pulse.enable = true;
-  
+
   # CRITICAL: WirePlumber manages PipeWire camera & audio streams
   wireplumber.enable = true;
 };
