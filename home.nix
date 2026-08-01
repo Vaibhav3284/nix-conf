@@ -31,9 +31,16 @@
 
   programs.brave = {
     enable = true;
-    commandLineArgs = [
-      "--disable-features=WebRtcAllowInputVolumeAdjustment"
-    ];
+    package = pkgs.symlinkJoin {
+      name = "brave";
+      paths = [ pkgs.brave ];
+      buildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/brave \
+          --add-flags "--disable-features=WebRtcAllowInputVolumeAdjustment"
+      '';
+    };
+
     extensions = [
       { id = "nngceckbapebfimnlniiiahkandclblb"; }
       { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; }
@@ -96,43 +103,27 @@
     };
   };
 
-  services.mpd = {
+  programs.zsh = {
     enable = true;
-    musicDirectory = "${config.home.homeDirectory}/Music";
-    extraConfig = ''
-      audio_output {
-        type        "pipewire"
-        name        "PipeWire Sound Server"
-      }
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    initContent = ''
+      # Enable interactive tab completion menu
+      zstyle ':completion:*' menu select
 
-      audio_output {
-        type        "fifo"
-        name        "my_fifo"
-        path        "/tmp/mpd.fifo"
-        format      "44100:16:2"
-      }
+      # Keybindings: Use Right Arrow key to accept autosuggestion
+      bindkey '^[[C' forward-word
     '';
-  };
+    syntaxHighlighting.enable = true;
 
-  programs.ncmpcpp = {
-    enable = true;
-    bindings = [
-      { key = "space"; command = "pause"; }
-    ];
-    mpdMusicDir = "${config.home.homeDirectory}/Music";
-    settings = {
-      ncmpcpp_directory = "${config.xdg.configHome}/ncmpcpp";
-      lyrics_directory = "${config.xdg.configHome}/ncmpcpp/lyrics";
-      progressbar_look = "─> ";
-      user_interface = "alternative";
-      alternative_header_first_line_format = "$b$1%t$/b";
-      alternative_header_second_line_format = "$b$8%a$/b - $5%b$/b $8(%y)$/b";
-      visualizer_data_source = "/tmp/mpd.fifo";
-      visualizer_output_name = "my_fifo";
-      visualizer_in_stereo = "yes";
-      visualizer_type = "wave";
-      visualizer_look = "▮●";
+    shellAliases = {
+      rebuild = "sudo nixos-rebuild switch --flake ~/nix-conf#nixos";
     };
+  };
+  programs.oh-my-posh = {
+    enable = true;
+    enableZshIntegration = true;
+    useTheme = "json"; # Replace with your preferred theme name
   };
 
   programs.home-manager.enable = true;

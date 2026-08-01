@@ -22,7 +22,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   services.xserver.enable = true;
-
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
@@ -51,15 +50,16 @@ services.pipewire = {
   users.users."bored" = {
     isNormalUser = true;
     description = "bored";
+    shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" "audio" "video" "camera" ];
     packages = with pkgs; [
     ];
   };
 
-  programs.firefox.enable = true;
   programs.steam = {
     enable = true;
   };
+  programs.zsh.enable = true;
 
   nixpkgs.config.allowUnfree = true;
 
@@ -73,6 +73,9 @@ services.pipewire = {
     transmission_4-gtk
     openjdk21
     stremio-linux-shell
+    obsidian
+    kew
+    heroic
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -87,14 +90,8 @@ services.pipewire = {
   seahorse        # Passwords and keys
   yelp
   gnome-maps
-  # gnome-weather
-  # gnome-music
   gnome-contacts
-  # gnome-clocks
-  # gnome-calculator
-  # gnome-font-viewer
-  # gnome-logs
-  # gnome-system-monitor
+  gnome-music
 ];
 
   nix.gc = {
