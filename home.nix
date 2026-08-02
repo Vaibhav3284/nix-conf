@@ -21,11 +21,6 @@
     noto-fonts-color-emoji
     liberation_ttf
     corefonts
-    gnomeExtensions.dash-to-dock
-    gnomeExtensions.appindicator
-    gnomeExtensions.clipboard-indicator
-    gnomeExtensions.caffeine
-    gnome-tweaks
     devenv
   ];
 
@@ -58,48 +53,6 @@
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
       pull.rebase = true;
-    };
-  };
-
-  dconf = {
-    enable = true;
-    settings = {
-      "org/gnome/shell" = {
-        disable-user-extensions = false;
-        enabled-extensions = with pkgs.gnomeExtensions; [
-          dash-to-dock.extensionUuid
-          appindicator.extensionUuid
-          clipboard-indicator.extensionUuid
-          "caffeine@patapon.info"
-        ];
-      };
-
-      "org/gnome/shell/extensions/dash-to-dock" = {
-        dock-position = "BOTTOM";
-        dash-max-icon-size = 32;
-        extend-height = false;
-        autohide = true;
-        dock-fixed = false;
-        custom-theme-shrink = true;
-      };
-
-      "org/gnome/shell/extensions/clipboard-indicator" = {
-        history-size = 50;
-        preview-size = 30;
-        clear-history-confirmation = true;
-      };
-
-      "org/gnome/shell/extensions/caffeine" = {
-        show-notifications = false;
-      };
-
-      "org/gnome/mutter" = {
-        experimental-features = [ "scale-monitor-framebuffer" ];
-      };
-
-      "org/gnome/desktop/interface" = {
-        text-scaling-factor = 0.75;
-      };
     };
   };
 

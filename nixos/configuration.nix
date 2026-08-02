@@ -22,8 +22,8 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
+  services.displayManager.plasma-login-manager.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
   services.xserver.xkb = {
     layout = "us";
@@ -68,11 +68,9 @@ services.pipewire = {
     wget
     faugus-launcher
     zed-editor
-    jetbrains.pycharm
     emacs
     transmission_4-gtk
     openjdk21
-    stremio-linux-shell
     obsidian
     kew
     heroic
@@ -80,19 +78,9 @@ services.pipewire = {
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  environment.gnome.excludePackages = with pkgs; [
-  gnome-tour      # GNOME Tour introduction app
-  gnome-connections # Remote desktop client
-  geary           # Email client
-  epiphany        # GNOME Web browser
-  evince          # Document viewer (PDFs)
-  totem           # GNOME Videos
-  seahorse        # Passwords and keys
-  yelp
-  gnome-maps
-  gnome-contacts
-  gnome-music
-];
+  environment.plasma6.excludePackages = with pkgs; [
+    elisa
+  ];
 
   nix.gc = {
     automatic = true;
