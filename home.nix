@@ -4,6 +4,16 @@
   home.homeDirectory = "/home/bored";
   home.stateVersion = "26.05";
 
+  # CRITICAL: Allows Home Manager to discover user-installed fonts (like Nerd Fonts)
+  fonts.fontconfig.enable = true;
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.adwaita-icon-theme; # Provides default GNOME cursors
+    name = "Adwaita";
+    size = 24;
+  };
+
   home.file.".emacs.d".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/.emacs.d";
   home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/nvim";
 
@@ -21,63 +31,155 @@
     noto-fonts-color-emoji
     liberation_ttf
     corefonts
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.appindicator
+    gnomeExtensions.clipboard-indicator
+    gnomeExtensions.caffeine
+    gnome-tweaks
     devenv
   ];
 
-  programs.brave = {
-    enable = true;
-    package = pkgs.symlinkJoin {
-      name = "brave";
-      paths = [ pkgs.brave ];
-      buildInputs = [ pkgs.makeWrapper ];
-      postBuild = ''
-        wrapProgram $out/bin/brave \
-          --add-flags "--disable-features=WebRtcAllowInputVolumeAdjustment"
-      '';
-    };
+  # ... [your programs.brave, git, zsh, oh-my-posh config stays here] ...
 
-    extensions = [
-      { id = "nngceckbapebfimnlniiiahkandclblb"; }
-      { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; }
-      { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; }
-    ];
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/desktop/interface" = {
+        cursor-theme = "Adwaita";
+        cursor-size = 24;
+      };
+      "org/gnome/shell" = {
+        disable-user-extensions = false;
+        enabled-extensions = with pkgs.gnomeExtensions; [
+          dash-to-dock.extensionUuid
+          appindicator.extensionUuid
+          clipboard-indicator.extensionUuid
+          "caffeine@patapon.info"
+        ];
+      };
+
+      "org/gnome/shell/extensions/dash-to-dock" = {
+        dock-position = "BOTTOM";
+        dash-max-icon-size = 32;
+        extend-height = false;
+        autohide = true;
+        dock-fixed = false;
+        custom-theme-shrink = true;
+      };
+
+      "org/gnome/shell/extensions/clipboard-indicator" = {
+        history-size = 50;
+        preview-size = 30;
+        clear-history-confirmation = true;
+      };
+
+      "org/gnome/shell/extensions/caffeine" = {
+        show-notifications = false;
+      };
+
+      "org/gnome/mutter" = {
+        experimental-features = [ "scale-monitor-framebuffer" ];
+      };
+
+      "org/gnome/desktop/interface" = {
+        # SET MONOSPACE FONT FOR GTK / GNOME APPLICATIONS
+        monospace-font-name = "JetBrainsMono Nerd Font 10";
+      };
+
+      # FOR PTYXIS (Default Terminal in GNOME 46+)
+      "org/gnome/Ptyxis" = {
+        font-name = "JetBrainsMono Nerd Font 10";
+        use-system-font = false;
+      };
+
+      # FOR CLASSIC GNOME TERMINAL
+      "org/gnome/terminal/legacy/profiles:/::\${profile-id}" = {
+        font = "JetBrainsMono Nerd Font 10";
+        use-system-font = false;
+      };
+    };
   };
 
   programs.git = {
     enable = true;
     settings = {
-      user = {
-        name = "Vaibhav3284";
-        email = "boredpenguin05@gmail.com";
-      };
-      init.defaultBranch = "main";
-      push.autoSetupRemote = true;
-      pull.rebase = true;
+      userName = "Vaibhav3284";
+      userEmail = "boredpenguin05@gmail.com";
     };
   };
-
   programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    initContent = ''
-      # Enable interactive tab completion menu
-      zstyle ':completion:*' menu select
-
-      # Keybindings: Use Right Arrow key to accept autosuggestion
-      bindkey '^[[C' forward-word
-    '';
-    syntaxHighlighting.enable = true;
-
-    shellAliases = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      shellAliases = {
+      # NixOS shortcuts
       rebuild = "sudo nixos-rebuild switch --flake ~/nix-conf#nixos";
+      nob = "sudo nixos-rebuild build";
+      nclean = "sudo nix-collect-garbage -d";
+      nconf = "sudo nvim /etc/nixos/configuration.nix";
+
+      # Navigation & Core utility replacements
+      ll = "ls -alF";
+      la = "ls -A";
+      l = "ls -CF";
+      ".." = "cd ..";
+      "..." = "cd ../..";
+
+      # Additional Git shortcuts in Zsh (optional short-form wrappers)
+      g = "git";
+      gst = "git status";
+      glg = "git log --graph --oneline --decorate --all";
+      gdiff = "git diff";
+    };
+
+    history = {
+      size = 10000;
+      save = 10000;
+      ignoreDups = true;
+      share = true;
     };
   };
-  programs.oh-my-posh = {
-    enable = true;
-    enableZshIntegration = true;
-    useTheme = "json"; # Replace with your preferred theme name
-  };
+
+  programs.brave = {
+      enable = true;
+      extensions = [
+        { id = "nngceckbapebfimnlniiiahkandclblb"; }
+        { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; }
+        { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; }
+      ];
+    };
+    programs.oh-my-posh = {
+      enable = true;
+      enableZshIntegration = true;
+      useTheme = "json"; # Oh My Posh automatically renders active Git branches & dirty status!
+    };
+
+    home.file.".config/monitors.xml".text = ''
+    <monitors version="2">
+      <configuration>
+        <logicalmonitor>
+          <x>0</x>
+          <y>0</y>
+          <scale>0.75</scale>
+          <primary>yes</primary>
+          <monitor>
+            <monitorspec>
+              <connector>DP-1</connector>
+              <vendor>DEL</vendor>
+              <product>DELL U2720Q</product>
+              <serial>000000000</serial>
+            </monitorspec>
+            <mode>
+              <width>1280</width>
+              <height>720</height>
+              <rate>60</rate>
+            </mode>
+          </monitor>
+        </logicalmonitor>
+      </configuration>
+    </monitors>
+  '';
 
   programs.home-manager.enable = true;
 }

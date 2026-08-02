@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib,  ... }:
 
 {
   imports =
@@ -22,8 +22,13 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   services.xserver.enable = true;
-  services.displayManager.plasma-login-manager.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
+  environment.sessionVariables = {
+    XCURSOR_THEME = "Adwaita";
+    XCURSOR_SIZE = "24";
+  };
 
   services.xserver.xkb = {
     layout = "us";
@@ -60,6 +65,8 @@ services.pipewire = {
     enable = true;
   };
   programs.zsh.enable = true;
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
 
   nixpkgs.config.allowUnfree = true;
 
@@ -74,13 +81,12 @@ services.pipewire = {
     obsidian
     kew
     heroic
+    adwaita-icon-theme
+    stremio-linux-shell
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  environment.plasma6.excludePackages = with pkgs; [
-    elisa
-  ];
 
   nix.gc = {
     automatic = true;
@@ -90,6 +96,20 @@ services.pipewire = {
 
   # Automatically hard-link duplicate store files to save space
   nix.settings.auto-optimise-store = true;
+
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour      # GNOME Tour introduction app
+    gnome-connections # Remote desktop client
+    geary           # Email client
+    epiphany        # GNOME Web browser
+    evince          # Document viewer (PDFs)
+    totem           # GNOME Videos
+    seahorse        # Passwords and keys
+    yelp
+    gnome-maps
+    gnome-contacts
+    gnome-music
+  ];
 
   system.stateVersion = "26.05"; # Did you read the comment?
 
