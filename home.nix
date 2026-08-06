@@ -7,6 +7,7 @@
   # CRITICAL: Allows Home Manager to discover user-installed fonts (like Nerd Fonts)
   fonts.fontconfig.enable = true;
   home.pointerCursor = {
+    enable = true;
     gtk.enable = true;
     x11.enable = true;
     package = pkgs.adwaita-icon-theme; # Provides default GNOME cursors
@@ -84,6 +85,7 @@
       "org/gnome/desktop/interface" = {
         # SET MONOSPACE FONT FOR GTK / GNOME APPLICATIONS
         monospace-font-name = "JetBrainsMono Nerd Font 10";
+        text-scaling-factor = 0.75;
       };
 
       # FOR PTYXIS (Default Terminal in GNOME 46+)
@@ -103,8 +105,10 @@
   programs.git = {
     enable = true;
     settings = {
-      userName = "Vaibhav3284";
-      userEmail = "boredpenguin05@gmail.com";
+      user = {
+        name = "Vaibhav3284";
+        email = "boredpenguin05@gmail.com";
+      };
     };
   };
   programs.zsh = {
@@ -117,7 +121,7 @@
       rebuild = "sudo nixos-rebuild switch --flake ~/nix-conf#nixos";
       nob = "sudo nixos-rebuild build";
       nclean = "sudo nix-collect-garbage -d";
-      nconf = "sudo nvim /etc/nixos/configuration.nix";
+      nconf = "sudo nvim ~/nix-conf/nixos/configuration.nix";
 
       # Navigation & Core utility replacements
       ll = "ls -alF";
@@ -154,32 +158,6 @@
       enableZshIntegration = true;
       useTheme = "json"; # Oh My Posh automatically renders active Git branches & dirty status!
     };
-
-    home.file.".config/monitors.xml".text = ''
-    <monitors version="2">
-      <configuration>
-        <logicalmonitor>
-          <x>0</x>
-          <y>0</y>
-          <scale>0.75</scale>
-          <primary>yes</primary>
-          <monitor>
-            <monitorspec>
-              <connector>DP-1</connector>
-              <vendor>DEL</vendor>
-              <product>DELL U2720Q</product>
-              <serial>000000000</serial>
-            </monitorspec>
-            <mode>
-              <width>1280</width>
-              <height>720</height>
-              <rate>60</rate>
-            </mode>
-          </monitor>
-        </logicalmonitor>
-      </configuration>
-    </monitors>
-  '';
 
   programs.home-manager.enable = true;
 }

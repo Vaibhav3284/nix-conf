@@ -79,7 +79,6 @@ services.pipewire = {
     transmission_4-gtk
     openjdk21
     obsidian
-    kew
     heroic
     adwaita-icon-theme
     stremio-linux-shell
