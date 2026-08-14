@@ -1,170 +1,163 @@
-# =============================================================================
-# i3 Minimalist / Rice Configuration
-# =============================================================================
-
-# Set modifier key to Super (Windows Key)
 set $mod Mod4
+set $term kitty
 
-# Set default font
-font pango:monospace 9
+font pango:Iosevka 12
 
-# Use Mouse+$mod to drag floating windows
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id nm-applet
+exec_always xinput disable DELL0816:00\ 044E:120A\ Touchpad
+# Screen locking & power management integration
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 000000
+exec --no-startup-id xfce4-power-manager
+exec_always --no-startup-id xset s 600 600
+exec_always --no-startup-id xset dpms 600 900 1200
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+ && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && $refresh_i3status
+
+# Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# -----------------------------------------------------------------------------
-# Window Aesthetics & Borders
-# -----------------------------------------------------------------------------
-# Hide title bars and use thin/no borders for a clean look
-default_border pixel 0
-default_floating_border pixel 0
-for_window [class=".*"] border pixel 0
+# move tiling windows via drag & drop by left-clicking into the title bar,
+# or left-clicking anywhere into the window while holding the floating modifier.
+tiling_drag modifier titlebar
 
-# Enable inner and outer gaps (requires i3-gaps / i3 v4.22+)
-gaps inner 4
-gaps outer 0
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+q kill
+bindsym $mod+d exec --no-startup-id rofi -show combi --window-title "run"
 
-# Color scheme (Minimal Dark)
-# class                 border  backgr. text    indicator child_border
-client.focused          #333333 #222222 #ffffff #444444   #333333
-client.focused_inactive #111111 #111111 #888888 #111111   #111111
-client.unfocused        #111111 #111111 #666666 #111111   #111111
-client.urgent           #900000 #900000 #ffffff #900000   #900000
-
-# -----------------------------------------------------------------------------
-# Keybindings: Core Applications & Launchers
-# -----------------------------------------------------------------------------
-# Terminal
-bindsym $mod+Return exec alacritty
-
-# Web Browser
-bindsym $mod+b exec firefox
-
-# App Launcher (dmenu with custom dark colors)
-bindsym $mod+d exec --no-startup-id dmenu_run -fn "monospace-9" -nb "#111111" -nf "#888888" -sb "#222222" -sf "#ffffff" -p "run:"
-
-# Screenshot tool (scrot)
-bindsym Print exec --no-startup-id scrot ~/Pictures/Screenshot_%Y%m%d_%H%M%S.png
-
-# Kill focused window
-bindsym $mod+q kill
-
-# =============================================================================
-# Volume, Brightness, & Microphone Media Keys
-# =============================================================================
-
-# Audio Volume Control (PulseAudio / PipeWire)
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
-
-# Microphone Mute Toggle
-bindsym XF86AudioMicMute    exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
-
-# Screen Brightness Control
-bindsym XF86MonBrightnessUp   exec --no-startup-id brightnessctl set +5%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
-
-# -----------------------------------------------------------------------------
-# Window Navigation (Vim Keys + Arrow Keys)
-# -----------------------------------------------------------------------------
-# Change focus (Vim keys)
-bindsym $mod+h focus left
+# change focused window
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
+bindsym $mod+h focus left
 
-# Change focus (Arrow keys)
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
-# Move focused window (Vim keys)
-bindsym $mod+Shift+h move left
+# move focused window
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
+bindsym $mod+Shift+h move left
 
-# Move focused window (Arrow keys)
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+# split in horizontal orientation
+bindsym $mod+Shift+v split h
 
-# Prevent i3 from adding borders to popups and transient windows
-for_window [window_role="pop-up"] border pixel 0
-for_window [window_type="popup_menu"] border pixel 0
-for_window [window_type="dropdown_menu"] border pixel 0
-for_window [window_type="menu"] border pixel 0
+# split in vertical orientation
+bindsym $mod+v split v
 
-# -----------------------------------------------------------------------------
-# Layout & Container Management
-# -----------------------------------------------------------------------------
-# Toggle floating mode
-bindsym $mod+Shift+space floating_toggle
-
-# Toggle fullscreen
+# enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
-# Change container layout
+# change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
-# Focus parent container
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
 bindsym $mod+a focus parent
 
-# Focus child container (Remapped to $mod+c to prevent conflict with dmenu $mod+d)
-bindsym $mod+c focus child
-
-# -----------------------------------------------------------------------------
-# Workspaces
-# -----------------------------------------------------------------------------
+# Define names for default workspaces for which we configure key bindings later on.
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
 set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
 
-# Switch to workspace
+# switch to workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
 bindsym $mod+3 workspace number $ws3
 bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
 
-# Move focused container to workspace
+# move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
 bindsym $mod+Shift+2 move container to workspace number $ws2
 bindsym $mod+Shift+3 move container to workspace number $ws3
 bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# -----------------------------------------------------------------------------
-# i3 Management
-# -----------------------------------------------------------------------------
-# Reload configuration file
+# reload the configuration file
 bindsym $mod+Shift+c reload
-
-# Restart i3 in place
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
-# Exit i3
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+        bindsym l resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym h resize grow width 10 px or 10 ppt
 
-# -----------------------------------------------------------------------------
-# Autostart Programs
-# -----------------------------------------------------------------------------
-# PipeWire audio daemon
-exec --no-startup-id pipewire
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
 
-# Set wallpaper (requires feh)
-exec_always --no-startup-id feh --bg-fill ~/Pictures/notthisone.png
+bindsym $mod+r mode "resize"
 
-# Compositor for shadows/transparency (picom)
-exec --no-startup-id picom -b
+mode "special" {
+        bindsym s exec "scrot -s"; mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
 
-# Polybar launch script
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+bindsym $mod+z mode "special"
+
+# window colors
+client.focused #9b8d7f #9b8d7f #000000 #9b8d7f #9b8d7f
+client.focused_inactive #222222 #222222 #9b8d7f #222222 #222222
+client.unfocused #222222 #222222 #9b8d7f #222222 #222222
+
+bar {
+  status_command i3blocks
+  position bottom
+  separator_symbol "::"
+  colors {
+    background #222222
+    statusline #9b8d7f
+    separator #9b8d7f
+
+    focused_workspace #9b8d7f #9b8d7f #222222
+    inactive_workspace #222222 #222222 #9b8d7f
+    active_workspace #222222 #222222 #9b8d7f
+    urgent_workspace #222222 #222222 #9b8d7f
+    binding_mode #222222 #222222 #9b8d7f
+  }
+  font pango:Iosevka Term 10
+  tray_output eDP-1
+}
 
 exec --no-startup-id dunst
-exec --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
+exec --no-startup-id thunar --daemon
 
-exec_always --no-startup-id xinput disable "DELL0816:00 044E:120A Touchpad"
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/bliss.jpg
+exec_always --no-startup-id picom --daemon --no-frame-pacing
