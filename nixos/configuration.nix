@@ -82,6 +82,7 @@ services.pipewire = {
     heroic
     adwaita-icon-theme
     stremio-linux-shell
+    discord
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
