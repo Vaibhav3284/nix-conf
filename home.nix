@@ -18,6 +18,7 @@
   home.file.".emacs.d".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/.emacs.d";
   home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-conf/dotfiles/nvim";
 
+
   home.packages = with pkgs; [
     git
     htop
@@ -145,6 +146,12 @@
     };
   };
 
+  programs.starship = {
+  enable = true;
+  enableZshIntegration = true;
+  settings = pkgs.lib.importTOML ./dotfiles/starship.toml;
+};
+
   programs.brave = {
       enable = true;
       extensions = [
@@ -156,7 +163,7 @@
     programs.oh-my-posh = {
       enable = true;
       enableZshIntegration = true;
-      useTheme = "json"; # Oh My Posh automatically renders active Git branches & dirty status!
+      useTheme = "agnoster"; # Oh My Posh automatically renders active Git branches & dirty status!
     };
 
   programs.home-manager.enable = true;

@@ -111,6 +111,18 @@ services.pipewire = {
     gnome-music
   ];
 
+  # Disable power-profiles-daemon
+  services.power-profiles-daemon.enable = false;
+
+  # Enable auto-cpufreq
+  services.auto-cpufreq.enable = true;
+  services.auto-cpufreq.settings = {
+    charger = {
+      governor = "performance";
+      turbo = "always";
+    };
+  };
+
   system.stateVersion = "26.05"; # Did you read the comment?
 
 }
