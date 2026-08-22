@@ -83,6 +83,8 @@ services.pipewire = {
     adwaita-icon-theme
     stremio-linux-shell
     discord
+    anki-bin
+    mpv
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

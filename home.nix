@@ -24,7 +24,6 @@
     htop
     curl
     wget
-    gcc
     tree-sitter
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
