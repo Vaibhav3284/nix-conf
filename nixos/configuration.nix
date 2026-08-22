@@ -1,4 +1,4 @@
-{ config, pkgs, lib,  ... }:
+{ config, pkgs, lib, inputs,  ... }:
 
 {
   imports =
@@ -56,7 +56,7 @@ services.pipewire = {
     isNormalUser = true;
     description = "bored";
     shell = pkgs.zsh;
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "camera" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "camera" "libvirtd" ];
     packages = with pkgs; [
     ];
   };
@@ -64,6 +64,10 @@ services.pipewire = {
   programs.steam = {
     enable = true;
   };
+
+  virtualisation.libvirtd.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true;
+
   programs.zsh.enable = true;
   programs.appimage.enable = true;
   programs.appimage.binfmt = true;
@@ -85,6 +89,9 @@ services.pipewire = {
     discord
     anki-bin
     mpv
+    gnome-boxes
+    inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
+
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
