@@ -151,19 +151,24 @@
   settings = pkgs.lib.importTOML ./dotfiles/starship.toml;
 };
 
-  programs.brave = {
-      enable = true;
-      extensions = [
-        { id = "nngceckbapebfimnlniiiahkandclblb"; }
-        { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; }
-        { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; }
-      ];
-    };
     programs.oh-my-posh = {
       enable = true;
       enableZshIntegration = true;
       useTheme = "agnoster"; # Oh My Posh automatically renders active Git branches & dirty status!
     };
+
+    programs.retroarch = {
+    enable = true;
+    cores = {
+      snes9x.enable = true;
+      mgba.enable = true;
+      genesis-plus-gx.enable = true;
+      beetle-psx-hw.enable = true;
+      mupen64plus.enable = true;
+      dolphin.enable = true;
+      pcsx2.enable = true;
+    };
+  };
 
   programs.home-manager.enable = true;
 }

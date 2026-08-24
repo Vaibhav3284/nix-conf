@@ -72,6 +72,8 @@ services.pipewire = {
   programs.appimage.enable = true;
   programs.appimage.binfmt = true;
 
+  programs.firefox.enable = true;
+
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
@@ -90,8 +92,6 @@ services.pipewire = {
     anki-bin
     mpv
     gnome-boxes
-    inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
-
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
