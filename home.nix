@@ -170,5 +170,28 @@
     };
   };
 
+  programs.fastfetch = {
+    enable = true;
+    settings = {
+      modules = [
+        "title"
+        "separator"
+        "os"
+        "host"
+        "kernel"
+        "uptime"
+        {
+          type = "command";
+          key = "OS Age";
+          text = "echo $(( ($(date +%s) - $(stat -c %Y /nix/var/nix/profiles/system-1-link)) / 86400 )) days";
+        }
+        "packages"
+        "shell"
+        "break"
+        "colors"
+      ];
+    };
+  };
+
   programs.home-manager.enable = true;
 }

@@ -92,6 +92,7 @@ services.pipewire = {
     anki-bin
     mpv
     gnome-boxes
+    fastfetch
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
