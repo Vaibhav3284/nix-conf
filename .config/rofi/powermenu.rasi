@@ -1,0 +1,61 @@
+configuration {
+    show-icons: false;
+}
+
+* {
+    /* Colors matching your terminal theme */
+    background:                  #141414e6; /* Dark background with slight transparency */
+    background-alt:              #242424;
+    text:                        #c5b18d; /* Muted beige/gold text */
+    text-selected:               #83a598; /* Soft greenish-blue active text */
+    border-color:                #3c3836; /* Subtle dark gray border */
+    font:                        "JetBrainsMono Nerd Font 13";
+}
+
+window {
+    transparency:                "real";
+    location:                    center;
+    anchor:                      center;
+    width:                       350px;
+    border:                      1px;
+    border-color:                @border-color;
+    border-radius:               4px;
+    background-color:            @background;
+    padding:                     20px;
+}
+
+mainbox {
+    background-color:            transparent;
+    children:                    [ listview ];
+}
+
+listview {
+    background-color:            transparent;
+    lines:                       5;
+    columns:                     1;
+    spacing:                     6px;
+    cycle:                       true;
+    dynamic:                     true;
+    layout:                      vertical;
+}
+
+element {
+    background-color:            transparent;
+    text-color:                  @text;
+    border-radius:               3px;
+    padding:                     10px 14px;
+}
+
+element selected {
+    background-color:            @background-alt;
+    text-color:                  @text-selected;
+    border:                      1px;
+    border-color:                #458588;
+}
+
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
