@@ -1,5 +1,5 @@
 set $mod Mod4
-set $term alacritty
+set $term kitty
 
 font pango:Iosevka 12
 
@@ -15,9 +15,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- $locker
 
 # Screen idle settings:
 # Locks screen after 5 minutes (300s), turns off display output after 10 minutes (600s)
-exec_always --no-startup-id xset s 300 300
-exec_always --no-startup-id xset dpms 600 600 600
-
+exec --no-startup-id ~/.local/bin/screen-inhibit
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -48,7 +46,7 @@ tiling_drag modifier titlebar
 
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
-bindsym $mod+d exec --no-startup-id rofi -show combi --window-title "run"
+bindsym $mod+d exec --no-startup-id rofi -show drun
 
 # change focused window
 bindsym $mod+j focus down
@@ -176,11 +174,14 @@ bar {
   tray_output eDP-1
 }
 
+default_border pixel 2
+default_floating_border pixel 2
+
 exec --no-startup-id dunst
 exec_always --no-startup-id pipewire
-#exec --no-startup-id thunar --daemon
+exec_always --no-startup-id pipewire-pulse 
+exec_always --no-startup-id wireplumber
 exec_always --no-startup-id xclip
 exec_always --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
-
 exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/wallhaven-k8d851_1920x1080.png
 exec_always --no-startup-id picom --daemon --no-frame-pacing

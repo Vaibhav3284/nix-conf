@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Menu options with clean spacing
-lock="󰌾  Lock"
-logout="󰗽  Logout"
-suspend="󰤄  Suspend"
-reboot="󰑐  Reboot"
-shutdown="󰐥  Power Off"
+lock="Lock"
+logout="Logout"
+suspend="Suspend"
+reboot="Reboot"
+shutdown="Power Off"
 
 options="$lock\n$logout\n$suspend\n$reboot\n$shutdown"
 
